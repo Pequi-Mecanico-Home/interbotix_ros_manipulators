@@ -64,7 +64,7 @@
     <texture filename="package://interbotix_xsarm_descriptions/meshes/interbotix_black.png"/>
   </material>
 
-  <xacro:if value="$(arg use_world_frame)">
+  <!-- <xacro:if value="$(arg use_world_frame)">
     <link name="world"/>
     <joint name="fixed" type="fixed">
       <parent
@@ -72,7 +72,7 @@
       <child
         link="$(arg robot_name)/$(arg base_link_frame)"/>
     </joint>
-  </xacro:if> <!-- use_world_frame -->
+  </xacro:if>  -->
 
   <link name="$(arg robot_name)/$(arg base_link_frame)">
     <visual>
