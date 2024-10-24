@@ -8,6 +8,7 @@
       <!-- If we are using the actual, physical robot -->
       <xacro:if value="${hardware_type == 'actual'}">
         <plugin>interbotix_xs_ros_control/XSHardwareInterface</plugin>
+        <param name="node_name">vx300s</param>
         <param name="loop_hz">10</param>
         <param name="group_name">arm</param>
         <param name="gripper_name">gripper</param>
