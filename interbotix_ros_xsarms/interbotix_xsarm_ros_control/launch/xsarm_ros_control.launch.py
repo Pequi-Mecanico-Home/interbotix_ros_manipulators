@@ -145,6 +145,19 @@ def launch_setup(context, *args, **kwargs):
         output={'both': 'screen'},
     )
 
+    spawn_gimbal_controller_node = Node(
+        name='gimbal_controller_spawner',
+        package='controller_manager',
+        executable='spawner',
+        namespace=robot_name_launch_arg,
+        arguments=[
+            '-c',
+            f'/{robot_name_launch_arg.perform(context)}/controller_manager',
+            'gimbal_controller',
+        ],
+        output={'both': 'screen'},
+    )
+
     spawn_gripper_controller_node = Node(
         name='gripper_controller_spawner',
         package='controller_manager',
@@ -179,6 +192,7 @@ def launch_setup(context, *args, **kwargs):
         controller_manager_node,
         spawn_arm_controller_node,
         spawn_gripper_controller_node,
+        spawn_gimbal_controller_node,
         spawn_joint_state_broadcaster_node,
         xsarm_control_launch_include,
         xsarm_descriptions_launch_include,

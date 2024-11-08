@@ -12,7 +12,7 @@
     <xacro:arg name="robot_name" default="vx300s"/>
     <xacro:arg name="base_link_frame" default="base_link"/>
     <xacro:arg name="show_ar_tag" default="false"/>
-    <xacro:arg name="external_srdf_loc" default=""/>
+    <xacro:arg name="external_srdf_loc" default="$(find misskal_vx300s)/srdf/misskal.srdf.xacro"/>
 
     <xacro:property name="srdf_loc" value="$(arg external_srdf_loc)"/>
 

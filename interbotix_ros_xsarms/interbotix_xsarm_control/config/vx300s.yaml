@@ -1,7 +1,7 @@
 port: /dev/ttyDXL
 
-joint_order: [waist, shoulder, elbow, forearm_roll, wrist_angle, wrist_rotate, gripper]
-sleep_positions: [0, -1.85, 1.55, 0, 0.8, 0, 0]
+joint_order: [waist, shoulder, elbow, forearm_roll, wrist_angle, wrist_rotate, head_pan, head_tilt, gripper]
+sleep_positions: [0,    -1.50,  1.55,            0,         0.6,            0,        0,      -1.6,       0]
 
 joint_state_publisher:
   update_rate: 100
@@ -10,6 +10,8 @@ joint_state_publisher:
 
 groups:
   arm: [waist, shoulder, elbow, forearm_roll, wrist_angle, wrist_rotate]
+  gimbal: [ head_pan, head_tilt]
+  grippers: [gripper]
 
 grippers:
   gripper:
@@ -25,8 +27,6 @@ shadows:
   elbow:
     shadow_list: [elbow_shadow]
     calibrate: true
-
-sisters:
 
 motors:
   waist:
@@ -110,7 +110,7 @@ motors:
     Secondary_ID: 255
 
   gripper:
-    ID: 9
+    ID: 11
     Baud_Rate: 3
     Return_Delay_Time: 0
     Drive_Mode: 0
@@ -118,3 +118,24 @@ motors:
     Min_Position_Limit: 0
     Max_Position_Limit: 4095
     Secondary_ID: 255
+
+  head_pan:
+    ID: 9
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 5
+    Velocity_Limit: 131
+    Min_Position_Limit: 200 #0 #
+    Max_Position_Limit: 4000 #4095 #
+    Secondary_ID: 255
+
+  head_tilt:
+    ID: 10
+    Baud_Rate: 3
+    Return_Delay_Time: 0
+    Drive_Mode: 0
+    Velocity_Limit: 131
+    Min_Position_Limit: 800 #0 #
+    Max_Position_Limit: 3300 #4095
+    Secondary_ID: 255
+

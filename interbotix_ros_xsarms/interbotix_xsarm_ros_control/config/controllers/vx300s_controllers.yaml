@@ -8,6 +8,8 @@
         type: joint_trajectory_controller/JointTrajectoryController
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
+      gimbal_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
   arm_controller:
     ros__parameters:
       joints:
@@ -45,3 +47,18 @@
         - wrist_rotate
         - gripper
         - left_finger
+  gimbal_controller:
+    ros__parameters:
+      joints:
+        - head_pan
+        - head_tilt
+      interface_name: position
+      command_interfaces:
+        - position
+      state_interfaces:
+        - position
+      state_publish_rate: 50.0
+      action_monitor_rate: 20.0
+      constraints:
+        stopped_velocity_tolerance: 0.02
+        goal_time: 1.0

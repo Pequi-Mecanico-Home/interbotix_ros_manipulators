@@ -196,7 +196,7 @@ def launch_setup(context, *args, **kwargs):
         xsarm_control_launch_include,
         rs_camera_launch_include,
         pc_filter_launch_include,
-        armtag_launch_include,
+        # armtag_launch_include,
         static_transform_pub_launch_include,
         xsarm_perception_rviz2_node,
     ]
@@ -342,7 +342,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'cloud_topic',
-            default_value='/camera/depth/color/points',
+            default_value='/camera/camera/depth/color/points',
             description='the absolute ROS topic name to subscribe to raw pointcloud data.',
         )
     )
@@ -374,14 +374,14 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'camera_color_topic',
-            default_value='camera/color/image_raw',
+            default_value='/camera/camera/color/image_raw',
             description='the absolute ROS topic name to subscribe to color images.',
         )
     )
     declared_arguments.append(
         DeclareLaunchArgument(
             'camera_info_topic',
-            default_value='camera/color/camera_info',
+            default_value='/camera/camera/color/camera_info',
             description='the absolute ROS topic name to subscribe to the camera color info.',
         )
     )

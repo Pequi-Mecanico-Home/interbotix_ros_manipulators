@@ -33,7 +33,7 @@ from interbotix_common_modules.common_robot.robot import (
     robot_shutdown,
     robot_startup,
 )
-from interbotix_perception_modules.armtag import InterbotixArmTagInterface
+# from interbotix_perception_modules.armtag import InterbotixArmTagInterface
 from interbotix_perception_modules.pointcloud import InterbotixPointCloudInterface
 from interbotix_xs_modules.xs_robot.arm import InterbotixManipulatorXS
 
@@ -52,7 +52,7 @@ Then change to this directory and type:
     python3 pick_place.py
 """
 
-ROBOT_MODEL = 'wx200'
+ROBOT_MODEL = 'vx300s'
 ROBOT_NAME = ROBOT_MODEL
 REF_FRAME = 'camera_color_optical_frame'
 ARM_TAG_FRAME = f'{ROBOT_NAME}/ar_tag_link'
@@ -71,12 +71,12 @@ def main():
     pcl = InterbotixPointCloudInterface(
         node_inf=global_node,
     )
-    armtag = InterbotixArmTagInterface(
-        ref_frame=REF_FRAME,
-        arm_tag_frame=ARM_TAG_FRAME,
-        arm_base_frame=ARM_BASE_FRAME,
-        node_inf=global_node,
-    )
+    # armtag = InterbotixArmTagInterface(
+    #     ref_frame=REF_FRAME,
+    #     arm_tag_frame=ARM_TAG_FRAME,
+    #     arm_base_frame=ARM_BASE_FRAME,
+    #     node_inf=global_node,
+    # )
 
     # Start up the API
     robot_startup(global_node)
@@ -86,7 +86,7 @@ def main():
     bot.gripper.release()
 
     # get the ArmTag pose
-    armtag.find_ref_to_arm_base_transform()
+    # armtag.find_ref_to_arm_base_transform()
     bot.arm.set_ee_pose_components(x=0.3, z=0.2)
 
     # get the cluster positions
