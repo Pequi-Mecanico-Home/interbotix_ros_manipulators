@@ -636,9 +636,12 @@
 
         <link name="$(arg robot_name)/left_finger_link">
           <visual>
+            <!-- <origin
+              rpy="${pi/2} ${-pi} ${pi/2}"
+              xyz="-0.0404 -0.0575 0"/> -->
             <origin
               rpy="${pi/2} ${-pi} ${pi/2}"
-              xyz="-0.0404 -0.0575 0"/>
+              xyz="-0.0404 -0.025 0"/>
             <geometry>
               <mesh
                 filename="${mesh_directory}/gripper_finger.stl"
@@ -647,9 +650,12 @@
             <material name="interbotix_black"/>
           </visual>
           <collision>
+            <!-- <origin
+              rpy="${pi/2} ${-pi} ${pi/2}"
+              xyz="-0.0404 -0.0575 0"/> -->
             <origin
               rpy="${pi/2} ${-pi} ${pi/2}"
-              xyz="-0.0404 -0.0575 0"/>
+              xyz="-0.0404 -0.025 0"/>
             <geometry>
               <mesh
                 filename="${mesh_directory}/gripper_finger.stl"
@@ -698,9 +704,12 @@
 
         <link name="$(arg robot_name)/right_finger_link">
           <visual>
+            <!-- <origin
+              rpy="${-pi/2} ${pi} ${-pi/2}"
+              xyz="-0.0404 0.0575 0 "/> -->
             <origin
               rpy="${-pi/2} ${pi} ${-pi/2}"
-              xyz="-0.0404 0.0575 0 "/>
+              xyz="-0.0404 0.025 0 "/>
             <geometry>
               <mesh
                 filename="${mesh_directory}/gripper_finger.stl"
@@ -709,9 +718,12 @@
             <material name="interbotix_black"/>
           </visual>
           <collision>
+            <!-- <origin
+              rpy="${-pi/2} ${pi} ${-pi/2}"
+              xyz="-0.0404 0.0575 0 "/> -->
             <origin
               rpy="${-pi/2} ${pi} ${-pi/2}"
-              xyz="-0.0404 0.0575 0 "/>
+              xyz="-0.0404 0.025 0 "/>
             <geometry>
               <mesh
                 filename="${mesh_directory}/gripper_finger.stl"
