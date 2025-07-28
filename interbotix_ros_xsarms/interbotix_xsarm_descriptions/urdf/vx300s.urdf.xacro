@@ -57,7 +57,7 @@
 
   <xacro:property name="finger_limit_effort"        value="5"/>
   <xacro:property name="finger_limit_lower"         value="0.021"/>
-  <xacro:property name="finger_limit_upper"         value="0.057"/>
+  <xacro:property name="finger_limit_upper"         value="0.077"/>
   <xacro:property name="finger_limit_vel"           value="1"/>
 
   <material name="interbotix_black">
@@ -619,7 +619,7 @@
           <axis xyz="0 1 0"/>
           <limit
             effort="${finger_limit_effort}"
-            lower="${finger_limit_lower}"
+            lower="-${finger_limit_lower}"
             upper="${finger_limit_upper}"
             velocity="${finger_limit_vel}"/>
           <origin
@@ -638,7 +638,7 @@
           <visual>
             <origin
               rpy="${pi/2} ${-pi} ${pi/2}"
-              xyz="-0.0404 -0.0575 0"/>
+              xyz="-0.0404 -0.025 0"/>
             <geometry>
               <mesh
                 filename="${mesh_directory}/gripper_finger.stl"
@@ -649,7 +649,7 @@
           <collision>
             <origin
               rpy="${pi/2} ${-pi} ${pi/2}"
-              xyz="-0.0404 -0.0575 0"/>
+              xyz="-0.0404 -0.025 0"/>
             <geometry>
               <mesh
                 filename="${mesh_directory}/gripper_finger.stl"
@@ -675,8 +675,8 @@
           <axis xyz="0 1 0"/>
           <limit
             effort="${finger_limit_effort}"
-            lower="${-finger_limit_upper}"
-            upper="${-finger_limit_lower}"
+            lower="-${finger_limit_upper}"
+            upper="${finger_limit_lower}"
             velocity="${finger_limit_vel}"/>
           <origin
             rpy="0 0 0"
@@ -700,7 +700,7 @@
           <visual>
             <origin
               rpy="${-pi/2} ${pi} ${-pi/2}"
-              xyz="-0.0404 0.0575 0 "/>
+              xyz="-0.0404 0.025 0 "/>
             <geometry>
               <mesh
                 filename="${mesh_directory}/gripper_finger.stl"
@@ -711,7 +711,7 @@
           <collision>
             <origin
               rpy="${-pi/2} ${pi} ${-pi/2}"
-              xyz="-0.0404 0.0575 0 "/>
+              xyz="-0.0404 0.025 0 "/>
             <geometry>
               <mesh
                 filename="${mesh_directory}/gripper_finger.stl"
