@@ -51,24 +51,17 @@ from launch.substitutions import (
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
-
+from launch.substitutions import (
+    LaunchConfiguration,
+    PathJoinSubstitution,
+    TextSubstitution,
+    FindExecutable,
+    Command,
+)
+# funciona
 def launch_setup(context, *args, **kwargs):
 
-    robot_model_launch_arg = LaunchConfiguration('robot_model')
     robot_name_launch_arg = LaunchConfiguration('robot_name')
-    base_link_frame_launch_arg = LaunchConfiguration('base_link_frame')
-    show_ar_tag_launch_arg = LaunchConfiguration('show_ar_tag')
-    use_world_frame_launch_arg = LaunchConfiguration('use_world_frame')
-    external_urdf_loc_launch_arg = LaunchConfiguration('external_urdf_loc')
-    external_srdf_loc_launch_arg = LaunchConfiguration('external_srdf_loc')
-    mode_configs_launch_arg = LaunchConfiguration('mode_configs')
-    use_moveit_rviz_launch_arg = LaunchConfiguration('use_moveit_rviz')
-    rviz_frame_launch_arg = LaunchConfiguration('rviz_frame')
-    rviz_config_file_launch_arg = LaunchConfiguration('rviz_config_file')
-    world_filepath_launch_arg = LaunchConfiguration('world_filepath')
-    robot_description_launch_arg = LaunchConfiguration('robot_description')
-    hardware_type_launch_arg = LaunchConfiguration('hardware_type')
-    robot_description_launch_arg = LaunchConfiguration('robot_description')
     hardware_type_launch_arg = LaunchConfiguration('hardware_type')
     use_moveit_interface_gui_launch_arg = LaunchConfiguration('use_moveit_interface_gui')
 
@@ -77,15 +70,29 @@ def launch_setup(context, *args, **kwargs):
         context=context,
         hardware_type_launch_arg=hardware_type_launch_arg
     )
-    config_path = PathJoinSubstitution([
-        FindPackageShare('interbotix_xsarm_moveit'),
-        'config',
+
+    robot_description_semantic = Command([
+    PathJoinSubstitution([
+        FindExecutable(name='xacro')
+    ]),
+    ' ',
+    PathJoinSubstitution([
+        FindPackageShare('misskal_moveit'),
+        'srdf',
+        'vx300s.srdf.xacro'
+    ]),
+    ' ',
+    'robot_name:=', LaunchConfiguration('robot_name'), ' ',
+    'base_link_frame:=', 'vx300s_base', ' ',
+    'use_gripper:=', LaunchConfiguration('use_gripper'), ' ',
+    'show_ar_tag:=', LaunchConfiguration('show_ar_tag'), ' ',
+    'show_gripper_bar:=', LaunchConfiguration('show_gripper_bar'), ' ',
+    'show_gripper_fingers:=', LaunchConfiguration('show_gripper_fingers'), ' ',
+    'use_world_frame:=', 'false', ' ',
+    'external_urdf_loc:=', LaunchConfiguration('external_urdf_loc'), ' ',
+    'external_srdf_loc:=', LaunchConfiguration('external_srdf_loc'), ' ',
     ])
 
-    robot_description_semantic = construct_interbotix_xsarm_semantic_robot_description_command(
-        robot_model=robot_model_launch_arg.perform(context),
-        config_path=config_path,
-    )
 
     moveit_interface_node = Node(
         package='interbotix_moveit_interface',
@@ -100,8 +107,8 @@ def launch_setup(context, *args, **kwargs):
             'use_sim_time': use_sim_time_param,
         }],
         remappings=(
-            ('/joint_states', f'/{robot_name_launch_arg.perform(context)}/joint_states'),
-            ('/robot_description', f'/{robot_name_launch_arg.perform(context)}/robot_description'),
+            ('/joint_states', f'/misskal/platform/joint_states'),
+            ('/robot_description', f'/misskal/robot_description'),
         )
     )
 
@@ -120,39 +127,15 @@ def launch_setup(context, *args, **kwargs):
         parameters=[{
             'use_sim_time': use_sim_time_param,
         }],
-    )
-
-    xsarm_moveit_launch_include = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('interbotix_xsarm_moveit'),
-                'launch',
-                'xsarm_moveit.launch.py'
-            ])
-        ]),
-        launch_arguments={
-            'robot_model': robot_model_launch_arg,
-            'robot_name': robot_name_launch_arg,
-            'base_link_frame': base_link_frame_launch_arg,
-            'show_ar_tag': show_ar_tag_launch_arg,
-            'use_world_frame': use_world_frame_launch_arg,
-            'external_urdf_loc': external_urdf_loc_launch_arg,
-            'external_srdf_loc': external_srdf_loc_launch_arg,
-            'mode_configs': mode_configs_launch_arg,
-            'use_moveit_rviz': use_moveit_rviz_launch_arg,
-            'rviz_frame': rviz_frame_launch_arg,
-            'rviz_config_file': rviz_config_file_launch_arg,
-            'hardware_type': hardware_type_launch_arg,
-            'world_filepath': world_filepath_launch_arg,
-            'robot_description': robot_description_launch_arg,
-            'use_sim_time': use_sim_time_param,
-        }.items(),
+        remappings=(
+            ('/joint_states', f'/misskal/platform/joint_states'),
+            ('/robot_description', f'/misskal/robot_description'),
+        )
     )
 
     return [
         moveit_interface_node,
         moveit_interface_gui_node,
-        xsarm_moveit_launch_include,
     ]
 
 
@@ -168,7 +151,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'robot_name',
-            default_value=LaunchConfiguration('robot_model'),
+            default_value='misskal', # HARD CODED
             description=(
                 'name of the robot (typically equal to `robot_model`, but could be anything).'
             ),
