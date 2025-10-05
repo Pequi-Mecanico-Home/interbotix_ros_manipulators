@@ -22,7 +22,8 @@
 
       <!-- If simulating the robot in Gazebo Classic -->
       <xacro:if value="${hardware_type == 'gz_classic'}">
-        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        <!-- <plugin>ign_ros2_control/IgnitionSystem</plugin> -->
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
       </xacro:if>
 
     </hardware>
@@ -116,7 +117,7 @@
   <xacro:if value="${hardware_type == 'gz_classic'}">
     <gazebo>
 
-      <!-- <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <!-- <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
         <ros>
           <namespace>/$(arg robot_name)</namespace>
         </ros>
