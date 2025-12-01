@@ -93,6 +93,94 @@ def launch_setup(context, *args, **kwargs):
     'external_srdf_loc:=', LaunchConfiguration('external_srdf_loc'), ' ',
     ])
 
+    remappings = [
+        (
+            '/planning_scene',
+            '/misskal/planning_scene'
+        ),
+        (
+            '/arm_controller/follow_joint_trajectory',
+            f'/misskal/arm_controller/follow_joint_trajectory'
+        ),
+        (
+            '/gripper_controller/follow_joint_trajectory',
+            f'/misskal/gripper_controller/follow_joint_trajectory'
+        ),
+        (
+            '/joint_states',
+            f'/misskal/platform/joint_states'
+        ),
+        (
+            '/move_group/trajectory_execution/goal',
+            f'/misskal/move_group/trajectory_execution/goal'
+        ),
+        (
+            '/move_group/get_planning_scene',
+            f'/misskal/move_group/get_planning_scene'
+        ),
+        (
+            '/tf',
+            f'/misskal/tf'
+        ),
+        (
+            '/tf_static',
+            f'/misskal/tf_static'
+        ),
+        (
+            '/move_group/feedback',
+            f'/misskal/move_group/feedback'
+        ),
+        (
+            '/move_group/status',
+            f'/misskal/move_group/status'
+        ),
+        (
+            '/move_group/result',
+            f'/misskal/move_group/result'
+        ),
+        (
+            '/move_action',
+            f'/misskal/move_action'
+        ),
+        (
+        '/attached_collision_object',
+        '/misskal/attached_collision_object'
+        ),
+        (
+        '/display_planned_path',
+        '/misskal/display_planned_path'
+        ),
+        (
+        '/monitored_planning_scene',
+        '/misskal/monitored_planning_scene'
+        ),
+        (
+        '/planning_scene_world',
+        '/misskal/planning_scene_world'
+        ),
+        (
+        '/trajectory_execution_event',
+        '/misskal/trajectory_execution_event'
+        ),
+        (
+            '/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/feedback',
+            f'/misskal/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/feedback'
+        ),
+        (
+            '/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/update',
+            f'/misskal/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/update'
+        ),
+        (
+            '/execute_task_solution',
+            '/misskal/execute_task_solution'
+        ),
+        (
+
+            '/robot_description', 
+            f'/misskal/robot_description'
+        ),
+    ]
+
 
     moveit_interface_node = Node(
         package='interbotix_moveit_interface',
@@ -103,13 +191,16 @@ def launch_setup(context, *args, **kwargs):
             expected_value='cpp'
         ),
         parameters=[{
+            'planning_scene_monitor_options': {
+                    'robot_description':
+                        'robot_description',
+                    'joint_state_topic':
+                         f'/misskal/platform/joint_states' if context.perform_substitution(use_sim_time_param).lower() == 'true' else '/misskal/joint_states_filtered'
+                },
             'robot_description_semantic': robot_description_semantic,
             'use_sim_time': use_sim_time_param,
         }],
-        remappings=(
-            ('/joint_states', f'/misskal/platform/joint_states'),
-            ('/robot_description', f'/misskal/robot_description'),
-        )
+        remappings=remappings,
     )
 
     moveit_interface_gui_node = Node(
@@ -125,12 +216,15 @@ def launch_setup(context, *args, **kwargs):
             )
         ),
         parameters=[{
+            'planning_scene_monitor_options': {
+                    'robot_description':
+                        'robot_description',
+                    'joint_state_topic':
+                         f'/misskal/platform/joint_states' if context.perform_substitution(use_sim_time_param).lower() == 'true' else '/misskal/joint_states_filtered'
+                },
             'use_sim_time': use_sim_time_param,
         }],
-        remappings=(
-            ('/joint_states', f'/misskal/platform/joint_states'),
-            ('/robot_description', f'/misskal/robot_description'),
-        )
+        remappings=remappings,
     )
 
     return [
