@@ -22,8 +22,6 @@
 
       <!-- If simulating the robot in Gazebo Classic -->
       <xacro:if value="${hardware_type == 'gz_classic'}">
-        <!-- <plugin>gazebo_ros2_control/GazeboSystem</plugin> -->
-        <!-- <plugin>ign_ros2_control/IgnitionSystem</plugin> -->
         <plugin>gz_ros2_control/GazeboSimSystem</plugin>
       </xacro:if>
 
@@ -34,7 +32,9 @@
         <param name="min">"${waist_limit_lower}"</param>
         <param name="max">"${waist_limit_upper}"</param>
       </command_interface>
-      <state_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
     </joint>
 
     <joint name="shoulder">
@@ -42,7 +42,9 @@
         <param name="min">"${shoulder_limit_lower}"</param>
         <param name="max">"${shoulder_limit_upper}"</param>
       </command_interface>
-      <state_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">-1.50</param>
+      </state_interface>
     </joint>
 
     <joint name="elbow">
@@ -50,7 +52,9 @@
         <param name="min">"${elbow_limit_lower}"</param>
         <param name="max">"${elbow_limit_upper}"</param>
       </command_interface>
-      <state_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">1.55</param>
+      </state_interface>
     </joint>
 
     <xacro:if value="${dof >= 6}">
@@ -59,7 +63,9 @@
           <param name="min">"${forearm_roll_limit_lower}"</param>
           <param name="max">"${forearm_roll_limit_upper}"</param>
         </command_interface>
-        <state_interface name="position"/>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
       </joint>
     </xacro:if>
 
@@ -68,7 +74,9 @@
         <param name="min">"${wrist_angle_limit_lower}"</param>
         <param name="max">"${wrist_angle_limit_upper}"</param>
       </command_interface>
-      <state_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">0.5</param>
+      </state_interface>
     </joint>
 
     <xacro:if value="${dof >= 5}">
@@ -77,40 +85,39 @@
           <param name="min">"${wrist_rotate_limit_lower}"</param>
           <param name="max">"${wrist_rotate_limit_upper}"</param>
         </command_interface>
-        <state_interface name="position"/>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
       </joint>
     </xacro:if>
 
     <xacro:if value="$(arg use_gripper)">
-      <xacro:if value="${hardware_type in ('fake', 'gz_classic')}">
+      <!-- Gazebo (gz_classic): the gripper joints are NOT in this block. They have their own
+           ros2_control block, GripperHardwareInterface, in
+           misskal_description/urdf/control/ros2_control.urdf.xacro (arm / gimbal / gripper split).
+           actual: identical to the robot (feat/gripper_controller).
+           TODO(real): stage E3 removes left_finger and gripper_name from the actual block (the
+           gripper moves to misskal_gripper_node); needs the XSHardwareInterface patch first.
+           See misskal_sim study/gripper_sim_integration/TODO_REAL.md (TR-01, TR-08). -->
+      <xacro:if value="${hardware_type == 'fake'}">
         <joint name="gripper">
           <command_interface name="position"/>
           <state_interface name="position"/>
         </joint>
       </xacro:if>
 
-      <xacro:if value="$(arg show_gripper_fingers)">
-        <joint name="left_finger">
-          <command_interface name="position">
-            <param name="min">"${finger_limit_lower}"</param>
-            <param name="max">"${-finger_limit_lower}"</param>
-          </command_interface>
-          <state_interface name="position"/>
-          <state_interface name="effort"/>
-          <state_interface name="velocity">
-            <param name="initial_value">0.0</param>
-          </state_interface>
-        </joint>
-
-        <xacro:if value="${hardware_type == 'gz_classic'}">
-          <joint name="right_finger">
-            <!-- <param name="mimic">left_finger</param>
-            <param name="multiplier">1</param> -->
+      <xacro:if value="${hardware_type != 'gz_classic'}">
+        <xacro:if value="$(arg show_gripper_fingers)">
+          <joint name="left_finger">
             <command_interface name="position">
-              <param name="min">"${-finger_limit_lower}"</param>
-              <param name="max">"${finger_limit_lower}"</param>
+              <param name="min">"${finger_limit_lower}"</param>
+              <param name="max">"${-finger_limit_lower}"</param>
             </command_interface>
             <state_interface name="position"/>
+            <state_interface name="effort"/>
+            <state_interface name="velocity">
+              <param name="initial_value">0.0</param>
+            </state_interface>
           </joint>
         </xacro:if>
       </xacro:if>
@@ -118,19 +125,14 @@
 
   </ros2_control>
 
-  <!-- Load the gazebo_ros2_control plugin if using Gazebo hardware -->
+  <!-- The robot-level Gazebo plugin is provided by the Clearpath platform xacro
+       (see clearpath_platform_description/urdf/generic/gazebo.urdf.xacro). Do not
+       add a second gz_ros2_control plugin here for gz_classic, because it loads the
+       wrong library and prevents the controller manager from exposing the joints.
+  -->
   <xacro:if value="${hardware_type == 'gz_classic'}">
     <gazebo>
-
-      <!-- <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-        <ros>
-          <namespace>/$(arg robot_name)</namespace>
-        </ros>
-        <robot_param>robot_description</robot_param>
-        <robot_param_node>robot_state_publisher</robot_param_node>
-        <parameters>$(find interbotix_xsarm_sim)/config/trajectory_controllers/${robot_model}_trajectory_controllers.yaml</parameters>
-      </plugin> -->
-
+      <!-- intentionally left blank: plugin is provided by the platform-level gz plugin -->
     </gazebo>
     <xacro:include filename="$(find interbotix_common_sim)/media/materials/scripts/interbotix_texture.gazebo"/>
   </xacro:if>
