@@ -5,8 +5,9 @@
 
     <hardware>
 
-      <!-- If we are using the actual, physical robot -->
-      <xacro:if value="${hardware_type == 'actual'}">
+      <!-- If we are using the actual, physical robot, or Isaac Sim through misskal_isaac
+           (same plugin; xs_sdk is replaced by xs_sdk_isaac, a servo model on top of Isaac) -->
+      <xacro:if value="${hardware_type in ['actual', 'isaac']}">
         <plugin>interbotix_xs_ros_control/XSHardwareInterface</plugin>
         <param name="node_name">vx300s_interface</param>
         <param name="loop_hz">10</param>
@@ -95,7 +96,7 @@
       <!-- Gazebo (gz_classic): the gripper joints are NOT in this block. They have their own
            ros2_control block, GripperHardwareInterface, in
            misskal_description/urdf/control/ros2_control.urdf.xacro (arm / gimbal / gripper split).
-           actual: identical to the robot (feat/gripper_controller).
+           actual: identical to the robot (feat/gripper_controller). isaac: same as actual.
            TODO(real): stage E3 removes left_finger and gripper_name from the actual block (the
            gripper moves to misskal_gripper_node); needs the XSHardwareInterface patch first.
            See misskal_sim study/gripper_sim_integration/TODO_REAL.md (TR-01, TR-08). -->
